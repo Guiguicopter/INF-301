@@ -12,9 +12,5 @@ mdp = "ESTEZET"
 
 envoyer("login " + login + " " + mdp)
 
-
-
-print ("Fin d'envoi des messages.")
-print ("Pour envoyer d'autres lignes, ajouter des appels à la fonction `envoyer`")
 deconnexion()
-print ("Fin de la connection au serveur")
+
