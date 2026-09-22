@@ -18,8 +18,6 @@ def crypter(message):
         if n < len(messageListe):   
             for j in range(n):
                 temp.append(messageListe.pop(0))
-        if i==360:
-            print(reponse[350:], n, temp)
         messageListe += temp
 
 
