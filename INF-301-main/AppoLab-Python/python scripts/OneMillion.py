@@ -5,7 +5,7 @@ from lib.Network import *
 class Noeud:
     def __init__(self, valeur):
         self.valeur = valeur
-        self.precedant:Noeud = None
+        self.precedent:Noeud = None
         self.suivant:Noeud = None
 
 class Sequence:
@@ -31,7 +31,7 @@ class Sequence:
         print("liste :", end=' ')
         while cel:
             print(cel.valeur, end = "->")
-            cel = cel.precedant
+            cel = cel.precedent
         print("None")
         print("taille : ", self.longueur, '\n')
 
@@ -40,7 +40,7 @@ class Sequence:
         noeud = Noeud(valeur)
         noeud.suivant = self.tete
         if self.tete:
-            self.tete.precedant = noeud
+            self.tete.precedent = noeud
         else:
             self.queue = noeud
         self.tete = noeud
@@ -78,7 +78,7 @@ def decrypteMove(message):
                 if mod == 1:
                     cel.suivant = seq.tete
                     tete = cel
-                    queue = cel.precedant
+                    queue = cel.precedent
 
                 else:
 
@@ -86,29 +86,29 @@ def decrypteMove(message):
 
                         if index == 0:
                             cel.suivant = seq.tete
-                            seq.tete.precedant = cel
-                            cel = cel.precedant
+                            seq.tete.precedent = cel
+                            cel = cel.precedent
 
                         elif index == mod-1:
                             tete = cel
-                            cel = cel.precedant
+                            cel = cel.precedent
 
                         elif index == mod:
                             queue = cel
-                            cel = cel.precedant
+                            cel = cel.precedent
 
                         else:
-                            cel = cel.precedant
+                            cel = cel.precedent
 
                         index += 1
 
                 seq.queue = queue
                 seq.tete = tete
                 if seq.tete.suivant:
-                    seq.tete.suivant.precedant = seq.tete
+                    seq.tete.suivant.precedent = seq.tete
 
 
-            seq.tete.precedant = queue
+            seq.tete.precedent = queue
             seq.queue.suivant = None
             seq.ajoute_debut(lettre)
             # seq.affiche_inverse()
