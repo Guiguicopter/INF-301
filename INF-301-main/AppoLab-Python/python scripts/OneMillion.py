@@ -26,7 +26,7 @@ class Sequence:
         print("taille : ", self.longueur, '\n')
 
 
-    def affiche_inverse(self):
+    def affiche_inverse(self): # affiche de la fin jusqu'au debut
         cel = self.queue
         print("liste :", end=' ')
         while cel:
@@ -58,62 +58,73 @@ class Sequence:
 def decrypteMove(message):
     seq = Sequence()
     mod = 0
+    lettre = ''
     for i in range(len(message)):
 
         lettre = message[-(i+1)]
         mod = ord(lettre) % 8
         # print(mod)
 
-        if i == 0:
+        if i == 0: # initialise le premier element de la sequence
             seq.ajoute_debut(lettre)
             seq.afficher()
 
+        # visualisation de la sequence à l'etape n
+                
+        # seq.tete -> cel(1) <-> cel(2) <-> ... <-> cel(n-1) <-> cel(n) <- seq.queue avec n > mod
+
+        # pour chaque sequence d'operation je vais mettre en commentaire avant la sequence voulue apres la sequence d'operation
+        # le noeud pointe par cel avant la sequence d'operation sera 'cel(i)'
+        # le noeud pointe par cel apres la sequence d'operation sera "cel(i)"
         else:
             index=0
             cel = seq.queue
-            tete = seq.tete
-            queue = seq.queue
 
             if mod < seq.longueur:
+
+
                 if mod == 1:
+                    # seq.tete -> 'cel(n)' <-> cel(1) <-> ... <-> cel(n-2) <-> "cel(n-1)" <- seq.queue
                     cel.suivant = seq.tete
-                    tete = cel
-                    queue = cel.precedent
+                    seq.tete = cel
+                    seq.queue = cel.precedent
 
-                else:
-
+                else: 
+                    # seq.tete -> cel(n-mod+1) <-> ... <-> 'cel(n)' <-> cel(1) <-> ... <-> "cel(n-mod-1)" <-> cel(n-mod) <- seq.queue
                     while index <= mod and cel:
-
                         if index == 0:
+                            # <-> 'cel(n)' <- seq.queue <- seq.tete -> cel(1) <-> ... <-> cel(n-2) <-> "cel(n-1)" <->
                             cel.suivant = seq.tete
                             seq.tete.precedent = cel
                             cel = cel.precedent
 
                         elif index == mod-1:
-                            tete = cel
+                            # <-> seq.tete -> 'cel(n-mod+1)' <-> ... <-> cel(n) <- seq.queue <- cel(1) <-> ... <-> cel(n-mod-1) <-> "cel(n-mod)" <->
+                            seq.tete = cel
                             cel = cel.precedent
 
                         elif index == mod:
-                            queue = cel
+                            # <-> seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> "cel(n-mod-1)" <-> 'cel(n-mod)' <- seq.queue
+                            seq.queue = cel
                             cel = cel.precedent
 
-                        else:
+                        else: # si 0 < index < mod-1
                             cel = cel.precedent
 
                         index += 1
 
-                seq.queue = queue
-                seq.tete = tete
-                if seq.tete.suivant:
+                if seq.tete.suivant: # evite une erreur
                     seq.tete.suivant.precedent = seq.tete
 
-
-            seq.tete.precedent = queue
+            # <-> seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> cel(n-mod-1) <-> cel(n-mod) <- seq.queue
+            seq.tete.precedent = seq.queue
             seq.queue.suivant = None
+            # cel(n-mod) <- seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> cel(n-mod-1) <-> cel(n-mod) <- seq.queue -> None
             seq.ajoute_debut(lettre)
             # seq.affiche_inverse()
 
     # seq.afficher()
+    # la fin transforme la sequence en chaine de caractere
     reponse = ""
     cel = seq.tete
 
