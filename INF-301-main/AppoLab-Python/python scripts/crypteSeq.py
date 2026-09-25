@@ -5,7 +5,7 @@ from lib.Network import *
 def retourner_liste(liste):
     return [liste.pop() for i in range(len(liste))]
 
-def crypter(message):
+def crypteMove(message):
 
     messageListe = list(message)
     reponse = ""
@@ -26,7 +26,7 @@ def crypter(message):
 
     return reponse
 
-def decrypter(message):
+def decrypteMove(message):
     reponse = []
     messageListe = list(message)
 
@@ -97,7 +97,7 @@ envoyer("login " + login + " " + mdp)
 envoyer("load crypteSeq")
 message = envoyerRecevoir("start")
 
-envoyer(crypteSeq(decrypter(message)))
+envoyer(crypteSeq(decrypteMove(message)))
 
 deconnexion()
 

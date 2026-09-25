@@ -117,9 +117,10 @@ def decrypteMove(message):
                     seq.tete.suivant.precedent = seq.tete
 
             # <-> seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> cel(n-mod-1) <-> cel(n-mod) <- seq.queue
-            seq.tete.precedent = seq.queue
+            # seq.tete.precedent = seq.queue
             seq.queue.suivant = None
-            # cel(n-mod) <- seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> cel(n-mod-1) <-> cel(n-mod) <- seq.queue -> None
+            # seq.queue <- seq.tete -> cel(n-mod+1) <-> ... <-> cel(n) <- cel(1) <-> ... <-> cel(n-mod-1) <-> cel(n-mod) <- seq.queue -> None
+            
             seq.ajoute_debut(lettre)
             # seq.affiche_inverse()
 

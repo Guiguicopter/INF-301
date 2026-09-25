@@ -119,41 +119,42 @@ def crypteAssoc(message):
     for i in message:
         cel = seq.queue
         j = 0
-        lettre = ''
         i_dans_seq = False
-        while j < seq.longueur and cel and not i_dans_seq:
+        while j < seq.longueur and cel and not i_dans_seq: # O(1) car la longueur de seq est 256 au maximum (si le message est en ASCCI exclusivement)
+
             if cel.suivant.valeur == i:
+                i_dans_seq = True # permet d'arreter la boucle while et faire une disjonction de cas plus tard
+
+                # echange les caracteres associes
+                cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
+
+                # if nessecaire pour deffirencier les cas de bords
                 if cel == seq.queue:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
+
                     seq.tete = seq.tete.suivant
                     seq.queue = seq.queue.suivant
-                    lettre = seq.queue.associe
-                    i_dans_seq = True
 
-                elif cel.suivant == seq.queue:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
-                    lettre = seq.queue.associe
-                    i_dans_seq = True
-                    
-                else:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
+                elif cel.suivant != seq.queue: 
+                    # si cel.suivant == seq.queue il faut juste echanger les valeurs associees ce qui est deja fait avant
 
+                    # -> seq.tete-> ... -> cel -> cel.suivant == suivant -> cel.suivant.suivant -> ... -> seq.queue -> seq.tete
                     suivant = cel.suivant
                     cel.suivant = cel.suivant.suivant
-                    cel = suivant
+                    # -> seq.tete-> ... -> cel -> cel.suivant.suivant -> ... -> seq.queue -> seq.tete
 
+                    cel = suivant
                     seq.queue.suivant = cel
                     cel.suivant = seq.tete
                     seq.queue = cel
+                    # -> seq.tete-> ... -> cel -> cel.suivant.suivant -> ... -> cel.suivant <- seq.queue -> seq.tete
 
-                    lettre = seq.queue.associe
-                    i_dans_seq = True
             else:
                 cel = cel.suivant
             j += 1
 
+        
         if i_dans_seq:
-            reponse += lettre
+            reponse += seq.queue.associe
         else:
             seq.ajoute_fin(i)
             reponse += i
@@ -169,30 +170,26 @@ def crypteAssoc(message):
 
 
 def decrypteAssoc(message):
+    # la structure et le fonctionnement de decrypteAssoc est le meme que crypteAssoc
+    # Seuls les changement seront indiqué
     seq = Sequence()
     reponse = ""
     for i in message:
-        cel = seq.tete
+        cel = seq.tete # changement
         j = 0
         lettre = ''
         i_dans_seq = False
         while j < seq.longueur and cel and not i_dans_seq:
-            if cel.associe == i:
+            if cel.associe == i: # changement
+                i_dans_seq = True
+                
+                cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
+
                 if cel == seq.queue:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
                     seq.tete = seq.tete.suivant
                     seq.queue = seq.queue.suivant
-                    lettre = seq.queue.valeur
-                    i_dans_seq = True
     
-                elif cel.suivant == seq.queue:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
-                    lettre = seq.queue.valeur
-                    i_dans_seq = True
-                    
-                else:
-                    cel.associe, cel.suivant.associe = cel.suivant.associe, cel.associe
-    
+                elif cel.suivant != seq.queue:
                     suivant = cel.suivant
                     cel.suivant = cel.suivant.suivant
                     cel = suivant
@@ -201,14 +198,12 @@ def decrypteAssoc(message):
                     cel.suivant = seq.tete
                     seq.queue = cel
     
-                    lettre = seq.queue.valeur
-                    i_dans_seq = True
             else:
                 cel = cel.suivant
             j += 1
     
         if i_dans_seq:
-            reponse += lettre
+            reponse += seq.queue.valeur # changement
         else:
             seq.ajoute_fin(i)
             reponse += i
